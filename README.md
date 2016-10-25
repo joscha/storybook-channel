@@ -1,35 +1,30 @@
-# Storybook Channel
+# Storybook Channel Mock
 
-Storybook Channel is similar to an EventEmitter. Channels are used with Storybook implementations to send/receive events between the Storybook Manager and the Storybook Renderer.
+[![Build Status](https://travis-ci.org/joscha/storybook-channel-mock.svg?branch=master)](https://travis-ci.org/joscha/storybook-channel-mock)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-```
-Channel {
-  addListener(type, listener)
-  emit(type, ...args)
-  eventNames()
-  listenerCount(type)
-  listeners(type)
-  on(type, listener)
-  once(type, listener)
-  prependListener(type, listener)
-  prependOnceListener(type, listener)
-  removeAllListeners(type)
-  removeListener(type, listener)
-}
-```
 
-The channel takes a Transport object as a parameter which will be used to send/receive messages. The transport object should implement this interface.
+Storybook Channel Mock allows you to mock a storybook channel in your unit tests.
 
-```
-Transport {
-  send(event)
-  setHandler(handler)
-}
-```
-
-Currently, channels are baked into storybook implementations and therefore this module is not designed to be used directly by addon developers. When developing addons, use the `getChannel` method exported by `@kadira/storybook-addons` module. For this to work, Storybook implementations should use the `setChannel` method before loading addons.
+## Usage in your tests
 
 ```js
 import addons from '@kadira/storybook-addons'
-const channel = addons.getChannel()
+import createMockChannel from 'storybook-channel-mock';
+
+
+describe('some storybook add-on', () => {
+  let channel;
+
+  beforeEach(() => {
+    channel = createMockChannel();
+    addons.setChannel(channel);
+  });
+
+  it('should be possible to message', () => {
+      // channel.emit('my/type', { ... });
+      // or your code that uses addons.getChannel()
+  });
+});
 ```
